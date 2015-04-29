@@ -10,9 +10,9 @@ public class ScoreBoardTest {
 	
 	private ScoreBoard subject;
 	
-	private Player playerOne;
+	private Player playerOne = new Player();
 	
-	private Player playerTwo;
+	private Player playerTwo = new Player();
 	
 	@Before
 	public void setUp(){
@@ -21,68 +21,94 @@ public class ScoreBoardTest {
 	
 	@Test
 	public void itShouldInitializeTheScoreBoardToZero() {		
-		assertThat(subject.scoreForPlayer(playerOne), is("0"));
-		assertThat(subject.scoreForPlayer(playerTwo), is("0"));
+		assertThat(subject.scoreForPlayer(playerOne), is("love"));
+		assertThat(subject.scoreForPlayer(playerTwo), is("love"));
 	}
 	
 	@Test
 	public void itShouldInitializeTheGameScoreToLoveLove() {		
-		assertThat(subject.scoreForGame(), is("love - love"));
+		assertThat(subject.scoreForGame(), is("love all"));
 	}
 	
 	@Test
 	public void theGameScoreBe15LoveIfPlayerOneScores() {		
-		subject.incrementPlayerScore(playerOne);
+		scoreTimes(playerOne, 1);
 		assertThat(subject.scoreForGame(), is("15 - love"));
 	}
 
 	@Test
-	public void theGameScoreBe15LoveIfPlayerTwoScores() {		
-		subject.incrementPlayerScore(playerTwo);
-		assertThat(subject.scoreForGame(), is("15 - love"));
+	public void theGameScoreBeLove15IfPlayerTwoScores() {		
+		scoreTimes(playerTwo, 1);
+
+		assertThat(subject.scoreForGame(), is("love - 15"));
 	}
 	
 	@Test
 	public void theGameScoreBe15AllIfPlayerOneAndTwoScoresOnce() {		
-		subject.incrementPlayerScore(playerOne);
-		subject.incrementPlayerScore(playerTwo);
+		scoreTimes(playerOne, 1);
+		scoreTimes(playerTwo, 1);
+
 		assertThat(subject.scoreForGame(), is("15 all"));
 	}
 	
 	@Test
+	public void theGameScoreBe30AllIfPlayerOneAndTwoScoresTwice() {		
+		scoreTimes(playerOne, 2);
+		scoreTimes(playerTwo, 2);
+
+		assertThat(subject.scoreForGame(), is("30 all"));
+	}
+	
+	@Test
 	public void itShouldIncrementPlayerScoreToFifteen() {
-		subject.incrementPlayerScore(playerOne);
+		scoreTimes(playerOne, 1);
 		
 		assertThat(subject.scoreForPlayer(playerOne), is("15"));
 	}
 	
 	@Test
 	public void itShouldIncrementPlayerScoreToThirty() {
-		subject.incrementPlayerScore(playerOne);
-		subject.incrementPlayerScore(playerOne);
+		scoreTimes(playerOne, 2);
 		
 		assertThat(subject.scoreForPlayer(playerOne), is("30"));
 	}
 	
 	@Test
 	public void itShouldIncrementPlayerScoreToForty() {
-		subject.incrementPlayerScore(playerOne);
-		subject.incrementPlayerScore(playerOne);
-		subject.incrementPlayerScore(playerOne);
+		scoreTimes(playerOne, 3);
 		
 		assertThat(subject.scoreForPlayer(playerOne), is("40"));
 	}
 	
 	@Test
-	public void whenBothPlayersHaveFortyTheScoreShouldBeDeuce() {
-		subject.incrementPlayerScore(playerOne);
-		subject.incrementPlayerScore(playerOne);
-		subject.incrementPlayerScore(playerOne);
+	public void itShouldBe40ToLoveIfPlayerOneScoresThreeTimesInARow() {
+		scoreTimes(playerOne, 3);
 		
-		subject.incrementPlayerScore(playerTwo);
-		subject.incrementPlayerScore(playerTwo);
-		subject.incrementPlayerScore(playerTwo);
+		assertThat(subject.scoreForGame(), is("40 - love"));
+	}
+	
+	@Test
+	public void whenBothPlayersHaveFortyTheScoreShouldBeDeuce() {
+		scoreTimes(playerOne, 3);
+		scoreTimes(playerTwo, 3);
 		
 		assertThat(subject.scoreForGame(), is("deuce"));
 	}
+
+	@Test
+	public void whenPlayersAreDeuceAndPlayerOneScoresThenPlayerOneHasAdvantage() {
+		scoreTimes(playerOne, 3);
+		scoreTimes(playerTwo, 3);
+		scoreTimes(playerOne, 1);
+		
+		assertThat(subject.scoreForGame(), is("adv - 40"));
+	}
+
+	private void scoreTimes(Player player, int times) {
+		for(int i = 0; i < times; i++) {
+			subject.incrementPlayerScore(player);	
+		}
+	}
+	
+	
 }

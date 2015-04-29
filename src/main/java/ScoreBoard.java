@@ -1,48 +1,49 @@
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class ScoreBoard {
 
-	private String[] makeMeAnEnum = {"0", "15", "30", "40"};
+	private String[] makeMeAnEnum = { "love", "15", "30", "40" , "adv"};
 
 	private Map<Player, Integer> scores;
 
+	private int playerOneScore = 0;
+	private int playerTwoScore = 0;
+
 	private Player playerOne;
 	private Player playerTwo;
-	
+
 	public ScoreBoard(Player playerOne, Player playerTwo) {
 
 		this.playerOne = playerOne;
 		this.playerTwo = playerTwo;
-		
-		scores = new HashMap<Player, Integer>();
-		scores.put(playerOne, 0);
-		scores.put(playerTwo, 0);
 	}
 
 	public void incrementPlayerScore(Player player) {
-		int newScore = scores.get(player) + 1;
-		
-		scores.put(player, newScore);
+		if (player == playerOne) {
+			playerOneScore++;
+		} else {
+			playerTwoScore++;
+		}
 	}
 
 	public String scoreForPlayer(Player player) {
-		return makeMeAnEnum[scores.get(player)];
+		if (player == playerOne) {
+			return makeMeAnEnum[playerOneScore];
+		} else {
+			return makeMeAnEnum[playerTwoScore];
+		}
+
 	}
 
 	public String scoreForGame() {
-		
-		if (scores.get(this.playerOne) == 1) {
-			return "15 - love";
+
+		if (playerOneScore == playerTwoScore) {
+			return playerOneScore == 3 ? "deuce" : makeMeAnEnum[playerOneScore] + " all";
+		} else {
+			return makeMeAnEnum[playerOneScore] + " - "
+					+ makeMeAnEnum[playerTwoScore];
 		}
-		
-		for(Integer score: scores.values()) {
-			if(score == 0){
-				return "love - love";
-			}
-		}
-		return "deuce";
 	}
 
 }
