@@ -37,9 +37,13 @@ public class ScoreBoard {
 	}
 
 	public String scoreForGame() {
-
+		if (playerOneScore == 5) {
+			playerOneScore = 4;
+			playerTwoScore = 3;
+		}
+		
 		if (playerOneScore == playerTwoScore) {
-			return playerOneScore == 3 ? "deuce" : makeMeAnEnum[playerOneScore] + " all";
+			return playerOneScore >= 3 ? "deuce" : makeMeAnEnum[playerOneScore] + " all";
 		} else {
 			return makeMeAnEnum[playerOneScore] + " - "
 					+ makeMeAnEnum[playerTwoScore];

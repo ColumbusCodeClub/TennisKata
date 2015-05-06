@@ -97,13 +97,54 @@ public class ScoreBoardTest {
 
 	@Test
 	public void whenPlayersAreDeuceAndPlayerOneScoresThenPlayerOneHasAdvantage() {
-		scoreTimes(playerOne, 3);
-		scoreTimes(playerTwo, 3);
+		deuce();
 		scoreTimes(playerOne, 1);
 		
 		assertThat(subject.scoreForGame(), is("adv - 40"));
 	}
-
+	
+	@Test
+	public void whenPlayersAreDeuceAndPlayerTwoScoresThenPlayerTwoHasAdvantage() {
+		deuce();
+		scoreTimes(playerTwo, 1);
+		
+		assertThat(subject.scoreForGame(), is("40 - adv"));
+	}
+	
+	@Test
+	public void whenPlayerOneHasAdvantageAndPlayerTwoScoresTheScoreShouldBeDeuce() {
+		deuce();
+		scoreTimes(playerOne, 1);
+		scoreTimes(playerTwo, 1);
+		
+		assertThat(subject.scoreForGame(), is("deuce"));
+	}
+	
+	@Test
+	public void whenPlayersBreakAdvantageThenPlayerOneScoresPlayerOneShouldHaveAdvantage() {
+		deuce();
+		scoreTimes(playerOne, 1);
+		scoreTimes(playerTwo, 1);
+		scoreTimes(playerOne, 1);
+		
+		assertThat(subject.scoreForGame(), is("adv - 40"));
+	}
+	
+	@Test
+	public void whenPlayersBreakAdvantageThenPlayerTwoScoresPlayerTwoShouldHaveAdvantage() {
+		deuce();
+		scoreTimes(playerOne, 1);
+		scoreTimes(playerTwo, 1);
+		scoreTimes(playerTwo, 1);
+		
+		assertThat(subject.scoreForGame(), is("40 - adv"));
+	}
+	
+	private void deuce() {
+		scoreTimes(playerOne, 3);
+		scoreTimes(playerTwo, 3);
+	}
+	
 	private void scoreTimes(Player player, int times) {
 		for(int i = 0; i < times; i++) {
 			subject.incrementPlayerScore(player);	
