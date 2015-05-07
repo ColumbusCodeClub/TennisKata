@@ -5,10 +5,9 @@ public class ScoreBoard {
 
 	private String[] makeMeAnEnum = { "love", "15", "30", "40" , "adv"};
 
-	private Map<Player, Integer> scores;
-
-	private int playerOneScore = 0;
-	private int playerTwoScore = 0;
+	private PlayerScore playerOneScore = new PlayerScore(0);
+	private PlayerScore playerTwoScore = new PlayerScore(0);
+	private int diff;
 
 	private Player playerOne;
 	private Player playerTwo;
@@ -21,33 +20,49 @@ public class ScoreBoard {
 
 	public void incrementPlayerScore(Player player) {
 		if (player == playerOne) {
-			playerOneScore++;
+			updatePlayerScores(playerOneScore, playerTwoScore);
 		} else {
-			playerTwoScore++;
+			updatePlayerScores(playerTwoScore, playerOneScore);
 		}
+		diff = playerOneScore.value() - playerTwoScore.value();
 	}
 
+	private void updatePlayerScores(PlayerScore scoreToIncrease, PlayerScore otherScore) {
+		if (scoreToIncrease.value() == 4 && scoreIsTied()) {
+			otherScore.setValue(3);
+		} else {
+			scoreToIncrease.increment();
+		}
+	}
+	
+	private boolean scoreIsTied() {
+		return diff == 0;
+	}
+	
 	public String scoreForPlayer(Player player) {
 		if (player == playerOne) {
-			return makeMeAnEnum[playerOneScore];
+			return makeMeAnEnum[playerOneScore.value()];
 		} else {
-			return makeMeAnEnum[playerTwoScore];
+			return makeMeAnEnum[playerTwoScore.value()];
 		}
 
 	}
 
 	public String scoreForGame() {
-		if (playerOneScore == 5) {
-			playerOneScore = 4;
-			playerTwoScore = 3;
+		if (diff > 0) {
+			if (diff > 2 && playerOneScore.value() > 3) {
+				return "Player one wins";
+			}
+		} else if (diff < 0) {
+			if (diff < -2 && playerTwoScore.value() > 3) {
+				return "Player two wins";
+			}
+		} else {
+			return playerOneScore.value() >= 3 ? "deuce" : makeMeAnEnum[playerOneScore.value()] + " all";
 		}
 		
-		if (playerOneScore == playerTwoScore) {
-			return playerOneScore >= 3 ? "deuce" : makeMeAnEnum[playerOneScore] + " all";
-		} else {
-			return makeMeAnEnum[playerOneScore] + " - "
-					+ makeMeAnEnum[playerTwoScore];
-		}
+		return makeMeAnEnum[playerOneScore.value()] + " - "
+			+ makeMeAnEnum[playerTwoScore.value()];
 	}
 
 }

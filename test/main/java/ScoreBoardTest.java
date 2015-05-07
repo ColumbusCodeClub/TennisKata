@@ -140,6 +140,20 @@ public class ScoreBoardTest {
 		assertThat(subject.scoreForGame(), is("40 - adv"));
 	}
 	
+	@Test
+	public void whenPlayerOneScoresFourTimesUninterruptedThenTheScoreShouldBeGame() {
+		scoreTimes(playerOne, 4);
+		
+		assertThat(subject.scoreForGame(), is("Player one wins"));
+	}
+	
+	@Test
+	public void whenPlayerTwoScoresFourTimesUninterruptedThenTheScoreShouldBeGame() {
+		scoreTimes(playerTwo, 4);
+		
+		assertThat(subject.scoreForGame(), is("Player two wins"));
+	}
+	
 	private void deuce() {
 		scoreTimes(playerOne, 3);
 		scoreTimes(playerTwo, 3);
